@@ -1,6 +1,10 @@
 ﻿namespace Avalonia.MusicStore.ViewModels
 
+open ReactiveUI
+
 type MainWindowViewModel() =
     inherit ViewModelBase()
 
-    member this.Greeting = "Welcome to Avalonia!"
+    let buy_music_command = ReactiveCommand.Create(fun () -> printfn "Buy music!")
+
+    member this.BuyMusicCommand = buy_music_command
