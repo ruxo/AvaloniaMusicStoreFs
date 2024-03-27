@@ -1,10 +1,18 @@
 ﻿namespace Avalonia.MusicStore.ViewModels
 
+open System
 open ReactiveUI
 
 type MainWindowViewModel() =
     inherit ViewModelBase()
 
-    let buy_music_command = ReactiveCommand.Create(fun () -> printfn "Buy music!")
+    let show_dialog = Interaction<MusicStoreViewModel, AlbumViewModel option>()
+    let run_dialog () =
+            printfn "Run dialog"
+            let store = MusicStoreViewModel()
+            in show_dialog.Handle(store)
+
+    let buy_music_command = ReactiveCommand.CreateFromObservable<AlbumViewModel option>(run_dialog)
 
     member this.BuyMusicCommand = buy_music_command
+    member this.ShowDialog = show_dialog
