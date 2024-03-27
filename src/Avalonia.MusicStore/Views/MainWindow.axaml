@@ -7,10 +7,12 @@
         x:Class="Avalonia.MusicStore.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Avalonia.MusicStore"
 
+        WindowStartupLocation="CenterScreen"
         TransparencyLevelHint="AcrylicBlur" Background="Transparent"
-        ExtendClientAreaToDecorationsHint="True">
+        ExtendClientAreaToDecorationsHint="True"
+
+        Title="Avalonia.MusicStore">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,

@@ -1,6 +1,5 @@
 ﻿namespace Avalonia.MusicStore.ViewModels
 
-open System
 open ReactiveUI
 
 type MainWindowViewModel() =
@@ -8,7 +7,6 @@ type MainWindowViewModel() =
 
     let show_dialog = Interaction<MusicStoreViewModel, AlbumViewModel option>()
     let run_dialog () =
-            printfn "Run dialog"
             let store = MusicStoreViewModel()
             in show_dialog.Handle(store)
 

@@ -1,6 +1,5 @@
 namespace Avalonia.MusicStore.Views
 
-open System
 open Avalonia
 open Avalonia.Markup.Xaml
 open Avalonia.MusicStore
@@ -19,14 +18,12 @@ type MainWindow () as this =
 #endif
         AvaloniaXamlLoader.Load(this)
 
-        let registerDialog (action: Action<IDisposable>) =
-            action.Invoke <| this.ViewModel.ShowDialog.RegisterHandler this.DoShowDialogAsync
-
-        this.WhenActivated registerDialog |> ignore
+        this.WhenActivated (fun disposable ->
+            this.DoShowDialogAsync |> this.ViewModel.ShowDialog.RegisterHandler |> disposeWith disposable
+        ) |> ignore
 
     member this.DoShowDialogAsync (interaction: InteractionContext<MusicStoreViewModel, AlbumViewModel option>) =
-        let dialog = MusicStoreWindow()
-        dialog.DataContext <- interaction.Input
+        let dialog = MusicStoreWindow(DataContext = interaction.Input)
 
         task {
             let! result = dialog.ShowDialog<AlbumViewModel option>(this)

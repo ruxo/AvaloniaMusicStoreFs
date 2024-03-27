@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="ReactiveUI.fs" />
     <Compile Include="ViewModels\Models.fs" />
     <Compile Include="ViewModels\MainWindowViewModel.fs" />
     <Compile Include="Views\MusicStoreWindow.axaml.fs" />
