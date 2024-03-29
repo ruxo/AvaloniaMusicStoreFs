@@ -16,6 +16,7 @@
     <Compile Include="ReactiveUI.fs" />
     <Compile Include="ViewModels\Models.fs" />
     <Compile Include="ViewModels\MainWindowViewModel.fs" />
+    <Compile Include="Views\AlbumView.axaml.fs" />
     <Compile Include="Views\MusicStoreView.axaml.fs" />
     <Compile Include="Views\MusicStoreWindow.axaml.fs" />
     <Compile Include="Views\MainWindow.axaml.fs" />

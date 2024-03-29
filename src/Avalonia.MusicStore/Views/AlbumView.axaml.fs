@@ -1,9 +1,9 @@
-namespace Avalonia.MusicStore
+namespace Avalonia.MusicStore.Views
 
 open Avalonia.Controls
 open Avalonia.Markup.Xaml
 
-type MusicStoreView () as this = 
+type AlbumView () as this =
     inherit UserControl ()
 
     do this.InitializeComponent()

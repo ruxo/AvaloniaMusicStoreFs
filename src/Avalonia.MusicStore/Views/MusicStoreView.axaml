@@ -2,14 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Avalonia.MusicStore.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Avalonia.MusicStore.MusicStoreView">
+             x:Class="Avalonia.MusicStore.MusicStoreView"
+             x:DataType="vm:MusicStoreViewModel">
   <DockPanel>
       <StackPanel DockPanel.Dock="Top">
-          <TextBox Watermark="Search for Albums..." />
-          <ProgressBar IsIndeterminate="True" />
+          <TextBox Watermark="Search for Albums..." Text="{Binding SearchText}" />
+          <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" />
       </StackPanel>
       <Button DockPanel.Dock="Bottom" HorizontalAlignment="Center" Content="Buy Album" />
-      <ListBox />
+      <ListBox ItemsSource="{Binding SearchResults}"
+               SelectedItem="{Binding SelectedAlbum}" />
   </DockPanel>
 </UserControl>
