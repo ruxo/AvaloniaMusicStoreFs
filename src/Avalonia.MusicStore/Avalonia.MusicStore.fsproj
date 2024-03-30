@@ -8,13 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Models\Models.fs" />
+    <Compile Include="Models\Album.fs" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="ReactiveUI.fs" />
     <Compile Include="ViewModels\Models.fs" />
+    <Compile Include="ViewModels\MusicStoreViewModel.fs" />
     <Compile Include="ViewModels\MainWindowViewModel.fs" />
     <Compile Include="Views\AlbumView.axaml.fs" />
     <Compile Include="Views\MusicStoreView.axaml.fs" />
