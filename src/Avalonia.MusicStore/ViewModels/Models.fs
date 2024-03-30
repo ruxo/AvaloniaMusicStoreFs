@@ -2,8 +2,11 @@
 
 open System
 open System.Collections.ObjectModel
+open System.Threading
+open FSharp.Control
 open FSharp.Control.Reactive
-open ReactiveUI
+open global.ReactiveUI
+open Avalonia.Media.Imaging
 open Avalonia.MusicStore.Models
 
 type ViewModelBase() =
@@ -12,8 +15,18 @@ type ViewModelBase() =
 type AlbumViewModel(album: Album) =
     inherit ViewModelBase()
 
+    let mutable nullable_cover: Bitmap = null
+
     member this.Artist = album.Artist
     member this.Title = album.Title
+    member this.Cover with get() = nullable_cover and set v = this.RaiseAndSetIfChanged(&nullable_cover, v) |> ignore
+
+    member this.LoadCover() =
+        async {
+            let! stream = album |> Album.loadCoverBitmap
+            this.Cover <- Bitmap.DecodeToWidth(stream, 400)
+            do! stream.DisposeAsync()
+        }
 
 type MusicStoreViewModel() as this =
     inherit ViewModelBase()
@@ -24,7 +37,12 @@ type MusicStoreViewModel() as this =
     let mutable is_busy = false
     let mutable selected_album :AlbumViewModel option = None
 
+    let mutable cancellation_source = new CancellationTokenSource()
+
     let notNull = Option.ofObj >> Option.filter (not << String.IsNullOrWhiteSpace)
+
+    let loadCovers () =
+        search_results |> Seq.map _.LoadCover() |> Seq.toArray |> Async.Parallel |> Async.Ignore
 
     let doSearch s = async {
         is_busy <- true
@@ -34,6 +52,7 @@ type MusicStoreViewModel() as this =
         | Some v ->
             let! albums = v |> Album.searchAsync
             albums |> Seq.iter (AlbumViewModel >> search_results.Add)
+            do! loadCovers()
         | None -> ()
 
         is_busy <- false
@@ -50,5 +69,8 @@ type MusicStoreViewModel() as this =
     member private this.Init() =
         this.WhenAnyValue(fun x -> x.SearchText)
             |> Observable.throttle (400 |> TimeSpan.FromMilliseconds)
-            |> Observable.subscribe (doSearch >> Async.Start)
+            |> Observable.subscribe (fun s -> cancellation_source.Cancel()
+                                              cancellation_source.Dispose()
+                                              cancellation_source <- new CancellationTokenSource()
+                                              Async.Start(doSearch(s), cancellation_source.Token))
             |> ignore
