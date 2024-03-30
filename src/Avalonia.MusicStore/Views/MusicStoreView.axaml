@@ -11,7 +11,7 @@
           <TextBox Watermark="Search for Albums..." Text="{Binding SearchText}" />
           <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" />
       </StackPanel>
-      <Button DockPanel.Dock="Bottom" HorizontalAlignment="Center" Content="Buy Album" />
+      <Button DockPanel.Dock="Bottom" HorizontalAlignment="Center" Content="Buy Album" Command="{Binding BuyMusicCommand}" />
       <ListBox ItemsSource="{Binding SearchResults}"
                SelectedItem="{Binding SelectedAlbum}">
           <ListBox.ItemsPanel>

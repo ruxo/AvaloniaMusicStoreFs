@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.ObjectModel
+open System.Reactive
 open System.Threading
 open FSharp.Control
 open FSharp.Control.Reactive
@@ -38,6 +39,7 @@ type MusicStoreViewModel() as this =
     let mutable selected_album :AlbumViewModel option = None
 
     let mutable cancellation_source = new CancellationTokenSource()
+    let mutable buy_music_command: ReactiveCommand<Unit, AlbumViewModel option> = null
 
     let notNull = Option.ofObj >> Option.filter (not << String.IsNullOrWhiteSpace)
 
@@ -64,9 +66,12 @@ type MusicStoreViewModel() as this =
     member this.IsBusy with get() = is_busy and set value = this.RaiseAndSetIfChanged(&is_busy, value) |> ignore
 
     member this.SelectedAlbum with get() = selected_album and set value = this.RaiseAndSetIfChanged(&selected_album, value) |> ignore
-    member this.SearchResults with get() = search_results
+    member this.SearchResults = search_results
+
+    member this.BuyMusicCommand = buy_music_command
 
     member private this.Init() =
+        buy_music_command <- ReactiveCommand.Create<Unit, AlbumViewModel option>(fun _ -> selected_album)
         this.WhenAnyValue(fun x -> x.SearchText)
             |> Observable.throttle (400 |> TimeSpan.FromMilliseconds)
             |> Observable.subscribe (fun s -> cancellation_source.Cancel()
