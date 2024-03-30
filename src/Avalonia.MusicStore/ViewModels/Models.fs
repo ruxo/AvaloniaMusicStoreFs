@@ -36,7 +36,7 @@ type MusicStoreViewModel() as this =
 
     let mutable search_text = String.Empty
     let mutable is_busy = false
-    let mutable selected_album :AlbumViewModel option = None
+    let mutable selected_album :obj = null
 
     let mutable cancellation_source = new CancellationTokenSource()
     let mutable buy_music_command: ReactiveCommand<Unit, AlbumViewModel option> = null
@@ -71,7 +71,10 @@ type MusicStoreViewModel() as this =
     member this.BuyMusicCommand = buy_music_command
 
     member private this.Init() =
-        buy_music_command <- ReactiveCommand.Create<Unit, AlbumViewModel option>(fun _ -> selected_album)
+        buy_music_command <- ReactiveCommand.Create<Unit, AlbumViewModel option>(fun _ ->
+                               if isNull selected_album
+                               then None
+                               else selected_album :?> AlbumViewModel |> Some)
         this.WhenAnyValue(fun x -> x.SearchText)
             |> Observable.throttle (400 |> TimeSpan.FromMilliseconds)
             |> Observable.subscribe (fun s -> cancellation_source.Cancel()
