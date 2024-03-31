@@ -67,7 +67,7 @@ module Album =
             return! fs |> loadFromStream
         }
 
-    let loadCache () =
+    let loadCachedAsync () =
         async {
             if not (Directory.Exists CachePath) then Directory.CreateDirectory CachePath |> ignore
 
